@@ -1,0 +1,196 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{amssymb,mathtext}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{multicol}
+\usepackage{indentfirst}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage[colorlinks=true]{hyperref}
+
+\title{HSE 2021: Mathematical Methods for Data Analysis. Assignment 6: optional}
+% \author{Anna Kuzina, \url{av.kuzina@yandex.ru}}
+
+\begin{document}
+\maketitle
+
+\section*{Disclaimer}
+\begin{itemize}
+    \item This is an optional homework, which contains of \textbf{4} theoretical problems, 2.5 point each.
+    \item We encourage you to use \LaTeX to write the solution. \href{https://www.overleaf.com/}{Overleaf} is a nice online editor, if you don't want to install it locally. Hand-written solutions will be also accepted, but only if you provide high quality \textbf{scans} in the form of a single pdf file. Please, make sure that TAs can read what you've submitted, otherwise, the submission will not be graded. 
+    \item You have \textbf{10 days} to complete the assignment. We recommend you to start early. No late submissions will be accepted. 
+    \item Please, give as much details in your derivation as possible. 
+\end{itemize}
+
+
+
+
+
+
+\section*{Problem 1. Intro to Bayesian ML. [2.5 points]}
+
+Consider a univariate Gaussian likelihood: 
+
+\begin{equation}
+    p(x | \mu, \tau)
+        = \mathcal{N}(x| \mu, \tau^{-1}) 
+        = \left(\frac{\tau}{2\pi}\right)^{\frac{1}{2}} \text{exp}\left(-\frac12 (x - \mu)^2}\tau \right)
+        \,.
+\end{equation}
+
+Let's define the following prior for the parameters $(\mu, \tau)$:
+
+\begin{align}
+    p(\mu, \tau)
+        &= \mathcal{N}(\mu | \mu_0, (\beta \tau)^{-1})\cdot \text{Gamma}(\tau; a, b) \\
+        &=  \left(\frac{\beta \tau}{2\pi}\right)^{\frac{1}{2}} \text{exp}\left(-\frac12 (\mu - \mu_0)^2\beta\tau \right) \cdot \frac{b^a \tau^{a-1}\exp(-b\tau)}{\Gamma(a)}
+        \,.
+\end{align}
+
+\subsubsection*{The task}
+Find the posterior distribution of $(\mu, \tau)$ after observing $N$ i.i.d. samples $X = (x_1, \dots, x_N)$ from the $p(x|\mu, \tau)$.
+
+\subsubsection*{Solution}
+\texttt{YOUR SOLUTION HERE}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Problem 2. Gaussian Processes. [2.5 points]}
+
+Assume, that the function $y(x)$, $x \in \mathbb{R}^d$, is a realization of a Gaussian
+Process with the kernel $K(a, b) = \exp({- \gamma \|a - b\|_2^2}))$:
+\begin{equation}
+y(x) \sim GP\bigl(0; K(x, x)\bigr).    
+\end{equation}
+
+Namely, for a given $x$, $y$ has a Gaussian distribution $\mathcal{N}(y|0, K(x, x))$
+ 
+
+Suppose two datasets were observed: \textbf{noiseless} and \textbf{noisy}:
+\begin{align}
+    & D_0 = \{ x_n, y(x_n) \}_{n=1}^{N} \,, \\
+    & D_1 = \{x'_m, y(x'_m) + \varepsilon_m \}_{m=1}^{M} \,,
+\end{align}
+
+where $\varepsilon_m$ are i.i.d. Gaussian:  $\varepsilon_m \sim \mathcal{N}(\varepsilon_m | 0, \sigma^2)$.
+
+\subsubsection*{The task}
+Derive the conditional distribution for a new point $y^* = y(x^*)$, given observed data: $p(y^* \big\vert {D_0, D_1})$.
+
+\subsubsection*{Hint} You can find useful properties of the Gaussian distribution for this task in the \href{http://www.math.uwaterloo.ca/~hwolkowi//matrixcookbook.pdf}{Matrix Cookbook}
+
+\subsubsection*{Solution}
+\texttt{YOUR SOLUTION HERE}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section*{Problem 3. Boosting. [2.5 points]}
+
+In this task you will be working with gradient boosting algorithm. Let's firstly recap the notation and the algorithm itself.
+
+\begin{align}
+    & b_m(x) := \text{the best base model from the family of the algorithms $\mathcal{A}$} \\
+    & \gamma_m(x) := \text{scale or weight of the new model} \\
+    & a_M(x) = \sum_{m=0}^M \gamma_m b_m(x) := \text{the final composite model}
+\end{align}
+
+
+Consider a loss function $L(y, z)$ for the target $y$ and prediction $z$, and let
+$\{x_n, y_n\}_{n=1}^N$ be the train dataset with $N$ observations for a regression task. Then gradient boosting algorithm is the following:
+
+
+\begin{enumerate}
+    \item Initialize $a_0(x) = \hat{z}$ with the constant prediction
+$   \hat{z} = \arg\min\limits_{z \in \mathbb{R}} \sum_{n=1}^N L(y_n, z)$
+
+    \item For $m$ from \texttt{1} to \texttt{M} do:
+
+
+Solve the current subproblem 
+    $G_m(b, \gamma) = \sum_{n=1}^N L\bigl(y_n, a_{m-1}(x_n) + \gamma b(x_n)\bigr) \to \min\limits_{b, \gamma}$
+, using the following method:
+\begin{itemize}
+    \item Compute the residuals
+    \begin{equation}
+        s_n = - \frac{\partial}{\partial z} L(y_n, z) \Big\vert_{z=a_{m-1}(x_n)}, n = 1,\dots, N.
+    \end{equation}
+    
+    \item Train the next base algorithm
+    \begin{equation}
+        b_m(x) = \arg\min\limits_{b\in\mathcal{A}}\sum_{n=1}^N \bigl(b(x_n) - s_n\bigr)^2.
+    \end{equation}
+    
+    \item Find its weight
+    \begin{equation}
+         \gamma_m = \arg\min_\gamma G_m(b_m, \gamma).
+    \end{equation}
+    
+    \item Update the mixture 
+    \begin{equation}
+        a_m(x) = a_{m-1}(x) + \gamma_m b_m(x).
+    \end{equation}
+\end{itemize}
+
+    \item Return  $a_M(x) = a_0(x) + \sum_{m=1}^M \gamma_m b_m(x)$.
+
+\end{enumerate}
+
+\subsubsection*{Finally, the task}
+Consider Poisson loss, namely $L(y, z) = - yz + \exp{z}$.
+
+\begin{itemize}
+    \item Derive formula for the residuals at a step $m$
+    \item Derive first-order conditions for $\gamma$ at a step $m$
+\end{itemize}
+
+\subsubsection*{Solution}
+\texttt{YOUR SOLUTION HERE}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Problem 4. Variational AutoEncoder. [2.5 points]}
+We observe a dataset $\{x_1, \dots, x_N\}$, in other words, we consider an empirical distribution over $x$: $p_e(x)=\frac{1}{N}\sum_{n=1}^{N}\delta_{x_n}(x)$. We want to infer a latent representation $z$ for a point $x$ from the dataset. Thus, we consider the following generative model with parameters $\theta$:
+\begin{equation}
+    \begin{aligned}
+    & z \sim p(z),
+    & x \sim p_{\theta}(x|z).
+    \end{aligned}
+\end{equation}
+We choose our generative model to be a linear and assume the presence of the normal noise:
+\begin{equation}
+p_{\theta}(x|z)=\mathcal{N}(x|W_pz+\mu_{p},\Lambda_{p}^{-1}),\theta:=\{W_p, \mu_p, \Lambda_{p}^{-1}\}.
+\end{equation}
+We want to infer parameters from data as an MLE solution:
+\begin{equation}
+\theta^{*} = \arg\max_{\theta}\mathbb{E}_{x}\log \int p_{\theta}(x|z)p(z)dz.
+\end{equation}
+Also, we would like to have the ability to find the latent representation $z$ for a new datapoint $x$. Thus, we will use variational approach to solve the optimization problem:
+\begin{equation}
+    \begin{aligned}
+    &\max_{\theta}\mathbb{E}_{x}\log \int p_{\theta}(x|z)p(z)dz \geq \max_{\theta,\phi}\mathbb{E}_{x}\int q_{\phi}(z|x) \log \frac{p_{\theta}(x|z)p(z)}{q_{\phi}(z|x)}dz.
+    \end{aligned}
+\end{equation}
+Since generative process is linear, we would like to use similar structure for the inference:
+\begin{equation}
+q_{\phi}(z|x)=\mathcal{N}(z|W_{q}x+\mu_{q},\Lambda_{q}^{-1}),\phi:=\{W_q, \mu_q, \Lambda_{q}^{-1}\}.
+\end{equation}
+
+Finally, note that taking expectations w.r.t empirical distribution is the same as averaging, which gives us the following objective:
+\begin{equation}\label{eq:vae}
+\mathcal{L} = \mathbb{E}_{x}\int q_{\phi}(z|x) \log \frac{p_{\theta}(x|z)p(z)}{q_{\phi}(z|x)}dz = \frac1N \sum_{n=1}^N \int q_{\phi}(z|x_n) \log \frac{p_{\theta}(x_n|z)p(z)}{q_{\phi}(z|x_n)}dz.
+\end{equation}
+
+\subsubsection*{Finally, the task}
+\begin{itemize}
+    \item Use first-order conditions (FOC) to find: $W_p, \mu_p$, given $W_q, \mu_q$, $\Lambda_{q}$ using objective \eqref{eq:vae}. Note that in the final formula $W_p$ may depend on $\mu_p$ and vice versa. 
+    \item Is it  enough to check the FOC for $\mu_p$? Check the convexity over $\mu_p$.
+\end{itemize}
+\subsubsection*{Solution}
+\texttt{YOUR SOLUTION HERE}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
