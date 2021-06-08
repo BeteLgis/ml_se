@@ -95,12 +95,14 @@ We'll be using AnyTask for grading: [course link](https://anytask.org/course/769
 ```Final grade = 0.7*HW + 0.3*Exam```
 
 * `HW` - Average grade for the assignments 1 to 5. 
-You can get extra points by solving HW 6, but no more than 10 in total. 
+You can get extra points by solving HW 6, but no more than 10 in total. Namely, `HW = (hw1 + hw2 + hw3 + hw4 + hw5 + hw6)/5`
+
+
 * `Exam` -  Grade for the exam
  
  ---
  
-You can skip the exam if your raw average grade for the first 5 assignemnts is **not smaller** than 5.5, i.e. (`HW >=5.5`). 
+You can skip the exam if your raw average grade for the assignemnts is **not smaller** than 5.5, i.e. (`HW >=5.5`). 
 In this case:
 
 ```Final grade = ROUND(HW)```
