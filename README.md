@@ -100,7 +100,7 @@ You can get extra points by solving HW 6, but no more than 10 in total.
  
  ---
  
-You can skip the exam if your average grade for the first 5 assignemnts is **not smaller** than 6 (`HW >=6`). 
+You can skip the exam if your raw average grade for the first 5 assignemnts is **not smaller** than 5.5, i.e. (`HW >=5.5`). 
 In this case:
 
-```Final grade = HW```
+```Final grade = ROUND(HW)```
