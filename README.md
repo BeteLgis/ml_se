@@ -98,7 +98,7 @@ We'll be using AnyTask for grading: [course link](https://anytask.org/course/769
 You can get extra points by solving HW 6, but no more than 10 in total. Namely, `HW = (hw1 + hw2 + hw3 + hw4 + hw5 + hw6)/5`
 
 
-* `Exam` -  Grade for the exam
+* `Exam` -  Grade for the exam. Read [this file](exam_ml.pdf) for more detais about exam
  
  ---
  
